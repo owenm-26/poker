@@ -31,6 +31,18 @@ class Poker:
         if flushSuit:
             return Result(handName='Flush', handCards=flush)
         
+        straight = self.checkStraight()
+        if straight:
+            return Result(handName='Straight', handCards=straight)
+        
+        #TO DO: Check 4 of a kind
+        if bestTrioRank > 0:
+            return Result(handName="Three of a Kind", handCards=self.ranks[bestTrioRank])
+        
+        if bestPairRank > 0:
+            return Result(handName="Pair", handCards=self.ranks[bestPairRank])
+        
+        
     
     def checkStraight(self):
         '''Helper method to check if a straight can be made with cards'''
