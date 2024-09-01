@@ -31,9 +31,10 @@ class Poker:
         if flushSuit:
             return Result(handName='Flush', handCards=flush)
         
-        straight = self.checkStraight()
-        if straight:
-            return Result(handName='Straight', handCards=straight)
+        straightExists, selectedCards  = self.checkStraight()
+        if straightExists:
+            print('returning straight')
+            return Result(handName='Straight', handCards=selectedCards)
         
         #TO DO: Check 4 of a kind
         if bestTrioRank > 0:
@@ -46,7 +47,25 @@ class Poker:
     
     def checkStraight(self):
         '''Helper method to check if a straight can be made with cards'''
-        pass
+        streak = None
+        selectedCards = []
+        for rank in range(14, 1, -1):
+            if streak:
+                if self.ranks[rank] and rank == streak[-1]-1:
+                    streak.append(rank)
+                    selectedCards.append(self.ranks[rank][0])
+                else:
+                    streak = None
+                    selectedCards = []
+            else:
+                if self.ranks[rank]:
+                    streak = [rank]
+                    selectedCards.append(self.ranks[rank][0])
+        if len(selectedCards) > 5:
+            selectedCards = selectedCards[:5]
+
+        return len(selectedCards) == 5, selectedCards
+
 
     def checkRankMatches(self):
         '''Helper method to check if pair, three of a kind, or full house can
@@ -128,8 +147,8 @@ class Poker:
                 self.suits[suit] = [c]
 
 if __name__ == '__main__':
-    # straight = Poker(['2S', '3H', '5S', '6D', '7C', 'QS', 'KS'])
-    # print(straight.findOptimalHand())
+    straight = Poker(['2S', '3H', '4D', '5S', '6D', '7C', 'QS', 'KS'])
+    print(straight.findOptimalHand())
 
     full_house = Poker(['2S', '2H', '2D', '3S', '3D', '5C', '7H'])
     print(full_house.findOptimalHand())
