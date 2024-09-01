@@ -70,8 +70,11 @@ class Poker:
                 if highestCard < s:
                     highestCard = s
                     flushSuit = suit
+        
+        if not flushSuit:
+            return None, None
 
-        # get the 5 highest cards
+        # get the 5 highest cards, use maxHeap
         heap = []
         heapify(heap)
         for card in self.suits[flushSuit]:
@@ -116,17 +119,17 @@ if __name__ == '__main__':
     # straight = Poker(['2S', '3H', '5S', '6D', '7C', 'QS', 'KS'])
     # print(straight.findOptimalHand())
 
-    # full_house = Poker(['2S', '2H', '2D', '3S', '3D', '5C', '7H'])
-    # print(full_house.findOptimalHand())
+    full_house = Poker(['2S', '2H', '2D', '3S', '3D', '5C', '7H'])
+    print(full_house.findOptimalHand())
 
-    # flush = Poker(['2H', '4H', '6H', '8H', '9H', 'JS', 'KD'])
-    # print(flush.findOptimalHand())
+    flush = Poker(['2H', '4H', '6H', '8H', '9H', 'JS', 'KD'])
+    print(flush.findOptimalHand())
 
-    # trio = Poker(['3D', '3S', '3H', '5C', '7S', '9D', 'KH'])
-    # print(trio.findOptimalHand())
+    trio = Poker(['3D', '3S', '3H', '5C', '7S', '9D', 'KH'])
+    print(trio.findOptimalHand())
 
-    # pair = Poker(['5H', '5C', '7D', '9S', 'JH', 'KD', '2S'])
-    # print(pair.findOptimalHand())
+    pair = Poker(['5H', '5C', '7D', '9S', 'JH', 'KD', '2S'])
+    print(pair.findOptimalHand())
 
     # straight = Poker(['4C', '5D', '6H', '7S', '8C', 'QH', 'AD'])
     # print(straight.findOptimalHand())
