@@ -31,21 +31,38 @@ class Poker:
         if flushSuit:
             return Result(handName='Flush', handCards=flush)
         
-        straightExists, selectedCards  = self.checkStraight()
+        straightExists, selectedCards, highestRank  = self.checkStraight()
         if straightExists:
             return Result(handName='Straight', handCards=selectedCards)
         
-        #TO DO: Check 4 of a kind
         if bestTrioRank > 0:
-            return Result(handName="Three of a Kind", handCards=self.ranks[bestTrioRank])
+            if len(self.ranks[bestTrioRank]) >= 4:
+                return Result(handName="Four of a Kind", handCards=self.ranks[bestTrioRank])
+            else:
+                return Result(handName="Three of a Kind", handCards=self.ranks[bestTrioRank])
         
         if bestPairRank > 0:
             return Result(handName="Pair", handCards=self.ranks[bestPairRank])
         
-        
+        else:
+            return Result(handName="High Card", handCards=self.highestCardHand(highestRank))
     
+    def highestCardHand(self, highestRank):
+        hand = set()
+        hand.add(self.ranks[highestRank][0])
+
+        i = 0
+        while len(self.cards) > i and len(hand) < 5:
+            hand.add(self.cards[i])
+            i+=1
+
+        return list(hand)
+
     def checkStraight(self):
         '''Helper method to check if a straight can be made with cards'''
+        # store this card in the scenario where High Card is the best hand
+        highestRank = -1
+        
         streak = None
         selectedCards = []
         for rank in range(14, 1, -1):
@@ -73,9 +90,13 @@ class Poker:
                 if self.ranks[rank]:
                     streak = [rank]
                     selectedCards.append(self.ranks[rank][0])
+
+            # update highestRank
+            if self.ranks[rank]:
+                highestRank = max(highestRank, rank)
         
 
-        return len(selectedCards) == 5, selectedCards
+        return len(selectedCards) == 5, selectedCards, highestRank
 
 
     def checkRankMatches(self):
@@ -180,6 +201,8 @@ if __name__ == '__main__':
     long_flush = Poker(['2H', '4H', '5H', '6H', '7H', '9H', 'JH', 'KH', '3D', '9S'])
     print("long_flush:",long_flush.findOptimalHand())
 
+    high_card = Poker(['4C', '9D', '2H', '5S', '8C', 'QH', 'AD'])
+    print("high_card:",high_card.findOptimalHand())
 
 
 
