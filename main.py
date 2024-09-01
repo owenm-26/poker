@@ -1,4 +1,3 @@
-from collections import Counter
 from heapq import heapify, heappop, heappush
 
 class Result:
@@ -48,9 +47,10 @@ class Poker:
             return Result(handName="High Card", handCards=self.highestCardHand(highestRank))
     
     def highestCardHand(self, highestRank):
+        '''Given the highestRank it gets the high card and then fills the rest of the hand
+        with other cards'''
         hand = set()
         hand.add(self.ranks[highestRank][0])
-
         i = 0
         while len(self.cards) > i and len(hand) < 5:
             hand.add(self.cards[i])
