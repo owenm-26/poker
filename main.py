@@ -7,7 +7,7 @@ class Result:
         self.handCards = handCards
 
     def __repr__(self) -> str:
-        return f"Best Hand: {self.handName} Cards: {self.handCards}"
+        return f"Best Hand: {self.handName} Cards: {self.handCards}\n -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --"
 
 class Poker:
     def __init__(self, cards) -> None:
@@ -33,7 +33,6 @@ class Poker:
         
         straightExists, selectedCards  = self.checkStraight()
         if straightExists:
-            print('returning straight')
             return Result(handName='Straight', handCards=selectedCards)
         
         #TO DO: Check 4 of a kind
@@ -51,18 +50,30 @@ class Poker:
         selectedCards = []
         for rank in range(14, 1, -1):
             if streak:
-                if self.ranks[rank] and rank == streak[-1]-1:
-                    streak.append(rank)
-                    selectedCards.append(self.ranks[rank][0])
+                # stop once streak is at len 5
+                if len(streak) == 5:
+                    break
+                
+                # if current rank is in hand
+                if self.ranks[rank]:
+
+                    # is it the next in the streak?
+                    if rank == streak[-1]-1:
+                        streak.append(rank)
+                        selectedCards.append(self.ranks[rank][0])
+                    else:
+                        streak = [rank]
+                        selectedCards = [self.ranks[rank][0]]
                 else:
                     streak = None
                     selectedCards = []
+
+            # for first time building streak
             else:
                 if self.ranks[rank]:
                     streak = [rank]
                     selectedCards.append(self.ranks[rank][0])
-        if len(selectedCards) > 5:
-            selectedCards = selectedCards[:5]
+        
 
         return len(selectedCards) == 5, selectedCards
 
@@ -148,25 +159,26 @@ class Poker:
 
 if __name__ == '__main__':
     straight = Poker(['2S', '3H', '4D', '5S', '6D', '7C', 'QS', 'KS'])
-    print(straight.findOptimalHand())
+    print("straight:",straight.findOptimalHand())
+    
 
     full_house = Poker(['2S', '2H', '2D', '3S', '3D', '5C', '7H'])
-    print(full_house.findOptimalHand())
+    print("full_house:",full_house.findOptimalHand())
 
     flush = Poker(['2H', '4H', '6H', '8H', '9H', 'JS', 'KD'])
-    print(flush.findOptimalHand())
+    print("flush:",flush.findOptimalHand())
 
     trio = Poker(['3D', '3S', '3H', '5C', '7S', '9D', 'KH'])
-    print(trio.findOptimalHand())
+    print("trio:",trio.findOptimalHand())
 
     pair = Poker(['5H', '5C', '7D', '9S', 'JH', 'KD', '2S'])
-    print(pair.findOptimalHand())
+    print("pair:",pair.findOptimalHand())
 
-    # straight = Poker(['4C', '5D', '6H', '7S', '8C', 'QH', 'AD'])
-    # print(straight.findOptimalHand())
+    straight2 = Poker(['4C', '5D', '6H', '7S', '8C', 'QH', 'AD'])
+    print("straight2:",straight2.findOptimalHand())
 
     long_flush = Poker(['2H', '4H', '5H', '6H', '7H', '9H', 'JH', 'KH', '3D', '9S'])
-    print(long_flush.findOptimalHand())
+    print("long_flush:",long_flush.findOptimalHand())
 
 
 
